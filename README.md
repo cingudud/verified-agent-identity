@@ -1,37 +1,44 @@
-# Verified Agent Identity
+ name: Verify Human Identity
 
-A decentralized identity management toolkit for AI agents using iden3 protocol on Billions Network.
+on:
+  workflow_dispatch:
+    inputs:
+      agent_name:
+        description: 'cingudud'
+        required: true
+        default: 'cingudud'
+      agent_description:
+        description: 'cingudud'
+        required: true
+        default: 'cingudud AI Agent'
 
-## Overview
+jobs:
+  verify:
+    runs-on: ubuntu-latest
 
-This skill enables AI agents to create, manage, link, prove and verify ownership of decentralized identities (DIDs) using cryptographic signatures.
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-## Installation
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-### Agent CTA:
+      - name: Step 1 - Install ClawHub skill
+        run: npx clawhub@latest install verified-agent-identity
 
-1. Ask bot to install the skill:
+      - name: Install script dependencies
+        run: |
+          cd scripts
+          npm install
 
-   ```plaintext
-   Install the skill `npx clawhub@latest install verified-agent-identity`
-   ```
+      - name: Step 2 - Create new Ethereum Identity
+        run: node scripts/createNewEthereumIdentity.js
 
-   Or
-
-   ```plaintext
-   Install the `verified-agent-identity` skill from the OpenClaw clawhub.ai.
-   ```
-
-2. (Optional) If the verification process did not start automatically after installation, ask your bot to initialize the process by sending a message like:
-
-   ```plaintext
-   Please link your agent identity to me.
-   ```
-
-### Human CTA:
-
-1. Install the skill:
-   ```bash
+      - name: Step 3 - Link Human to Agent
+        run: |
+          node scripts/manualLinkHumanToAgent.js --challenge '{"name": "cingudud", "description": "cloud AI Agent"}'  ```bash
    npx clawhub@latest install verified-agent-identity
    ```
 2. Create a new identity:
